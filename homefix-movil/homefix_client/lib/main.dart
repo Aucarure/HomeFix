@@ -5,8 +5,14 @@ import 'features/pedidos/screens/pedidos_screen.dart';
 import 'features/alertas/screens/alertas_screen.dart';
 import 'features/perfil/screens/perfil_screen.dart';
 import 'features/solicitud/screens/paso1_categoria_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: 'https://lilgdbexkkmzipniijkp.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbGdkYmV4a2ttemlwbmlpamtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDI1NTUsImV4cCI6MjA5MzMxODU1NX0.Fqy4Rr9XWZWF1Ejprb_CL1k_58lJ3OOxqSB9l0aWNc8',
+  );
   runApp(const MyApp());
 }
 
