@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiClient {
-  // 🔧 Cambia por tu IP local en desarrollo
-  // Para emulador Android: 10.0.2.2
-  // Para dispositivo físico: IP de tu PC en la red local
+  
+//CON L AIP DE MI LABTOP(VICTOR)
+//static const String baseUrl = 'http://10.200.168.249:3000/api';
 //PARA USARLO EN EMULADOR
 static const String baseUrl = 'http://10.0.2.2:3000/api';
 // PARA USARLO EN WEB
@@ -31,7 +31,26 @@ static const String baseUrl = 'http://10.0.2.2:3000/api';
       throw Exception('Error ${response.statusCode}: ${response.body}');
     }
   }
+  static Future<List<dynamic>> getList(String path) async {
+    final uri = Uri.parse('$baseUrl$path');
+    final response = await http.get(uri, headers: headers);
 
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error ${response.statusCode}: ${response.body}');
+    }
+  }
+  static Future<Map<String, dynamic>> getMap(String path) async {
+  final uri = Uri.parse('$baseUrl$path');
+  final response = await http.get(uri, headers: headers);
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Error ${response.statusCode}: ${response.body}');
+  }
+}
   static Future<List<dynamic>> get(String path) async {
     final uri = Uri.parse('$baseUrl$path');
     final response = await http.get(uri, headers: headers);

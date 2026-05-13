@@ -49,7 +49,7 @@ class _Paso2bPreguntasScreenState extends State<Paso2bPreguntasScreen> {
       );
 
       final resultado = await SolicitudesService.confirmar(
-        usuarioId: '6b6f3bd6-20ef-46b3-acc0-fd3ddbc7f7a9', // reemplaza con el ID real cuando tengas auth
+        usuarioId: 'c24afad9-6274-4752-89b0-824f1a44da50', // reemplaza con el ID real cuando tengas auth
         problemaDetectado: widget.analisis.problemaDetectado,
         categoria: widget.analisis.categoria,
         textMejorado: widget.analisis.textoMejorado ?? widget.solicitud.descripcion ?? '',

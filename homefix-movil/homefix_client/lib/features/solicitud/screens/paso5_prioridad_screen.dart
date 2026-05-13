@@ -143,11 +143,22 @@ class _Paso5PrioridadScreenState extends State<Paso5PrioridadScreen> {
                           style: TextStyle(color: AppColors.textGrey, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1),
                         ),
                         const SizedBox(height: 16),
+                        // Reemplaza el resumen del precio en el Container de RESUMEN:
                         _buildResumenRow('Categoría', widget.solicitud.categoria ?? 'N/A'),
                         const SizedBox(height: 12),
-                        _buildResumenRow('Precio', 'S/. ${widget.solicitud.precioFinal?.toStringAsFixed(0) ?? '0'}'),
-                        const SizedBox(height: 12),
-                        _buildResumenRow('Urgencia', widget.solicitud.conPrioridad ? 'Alta (+S/.5)' : 'Normal'),
+                        _buildResumenRow(
+                          'Precio base',
+                          'S/. ${widget.solicitud.precioFinal?.toStringAsFixed(0) ?? '0'}',
+                        ),
+                        if (widget.solicitud.conPrioridad) ...[
+                          const SizedBox(height: 12),
+                          _buildResumenRow('Prioridad', '+ S/. 5'),
+                        ],
+                        const Divider(height: 24),
+                        _buildResumenRow(
+                          'Total',
+                          'S/. ${((widget.solicitud.precioFinal ?? 0) + (widget.solicitud.conPrioridad ? 5 : 0)).toStringAsFixed(0)}',
+          ),
                       ],
                     ),
                   ),
@@ -175,7 +186,10 @@ class _Paso5PrioridadScreenState extends State<Paso5PrioridadScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const RadarScreen(),
+                      builder: (_) => RadarScreen(
+                        solicitudId: widget.solicitud.solicitudId ?? 'f1000000-0000-0000-0000-000000000001',
+                        solicitud: widget.solicitud,
+                      ),
                     ),
                   );
                 },

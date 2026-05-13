@@ -19,6 +19,14 @@ class SolicitudModel {
   String? justificacion;
   String? observaciones;
 
+  // Ubicación
+  String? direccionId;
+  double? latitud;
+  double? longitud;
+
+  // ID de la solicitud creada en backend
+  String? solicitudId;
+
   SolicitudModel({
     this.categoria,
     this.descripcion,
