@@ -4,6 +4,7 @@ import '../../../core/models/analisis_response.dart';
 import '../../../core/services/solicitudes_service.dart';
 import '../models/solicitud_model.dart';
 import 'paso3_precio_screen.dart';
+import '../../../core/services/session_service.dart';
 
 class Paso2bPreguntasScreen extends StatefulWidget {
   final SolicitudModel solicitud;
@@ -49,7 +50,7 @@ class _Paso2bPreguntasScreenState extends State<Paso2bPreguntasScreen> {
       );
 
       final resultado = await SolicitudesService.confirmar(
-        usuarioId: 'c24afad9-6274-4752-89b0-824f1a44da50', // reemplaza con el ID real cuando tengas auth
+        usuarioId: SessionService.usuarioId ?? '', 
         problemaDetectado: widget.analisis.problemaDetectado,
         categoria: widget.analisis.categoria,
         textMejorado: widget.analisis.textoMejorado ?? widget.solicitud.descripcion ?? '',
@@ -69,11 +70,12 @@ class _Paso2bPreguntasScreenState extends State<Paso2bPreguntasScreen> {
         ..justificacion = resultado.ia.justificacion
         ..observaciones = resultado.ia.observaciones;
 
-      if (!mounted) return;
+       if (!mounted) return;
       Navigator.push(context, MaterialPageRoute(
         builder: (_) => Paso3PrecioScreen(solicitud: widget.solicitud),
       ));
     } catch (e) {
+      print('❌ ERROR CONFIRMAR: $e'); // ← AGREGA ESTA LÍNEA
       setState(() => _error = 'Error al obtener estimación. Intenta de nuevo.');
     } finally {
       setState(() => _cargando = false);

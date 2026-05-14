@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../home/screens/home_screen.dart';
 import 'login_screen.dart';
+import '../../../main.dart';          // ← CAMBIA este import
+import '../../../core/services/session_service.dart'; // agregar
+import '../../../core/services/api_client.dart'; 
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,24 +21,31 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _verificarSesion() async {
-    await Future.delayed(const Duration(seconds: 2));
+  await Future.delayed(const Duration(seconds: 2));
 
-    final session = Supabase.instance.client.auth.currentSession;
+  final session = Supabase.instance.client.auth.currentSession;
+
+  if (!mounted) return;
+
+  if (session != null) {
+    // Cargar datos del usuario en SessionService
+    try {
+      final data = await ApiClient.getMap('/usuarios/${session.user.id}');
+      SessionService.guardar(data);
+    } catch (e) {
+      // Si falla igual navega
+    }
 
     if (!mounted) return;
-
-    if (session != null) {
-      // Ya tiene sesión activa → ir a home
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
-    } else {
-      // No tiene sesión → ir a login
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-      );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const MainScreen()),
+    );
+  } else {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
     }
   }
 

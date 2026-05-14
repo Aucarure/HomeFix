@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 
 class ApiClient {
   
-//CON L AIP DE MI LABTOP(VICTOR)
-//static const String baseUrl = 'http://10.200.168.249:3000/api';
-//PARA USARLO EN EMULADOR
+//CON L AIP DE MI LABTOP(VICTOR) y corre en celular
+//static const String baseUrl = 'http://192.168.18.177:3000/api';
+//PARA USARLO EN EMULADOR en mi laptop
 static const String baseUrl = 'http://10.0.2.2:3000/api';
 // PARA USARLO EN WEB
 //static const String baseUrl = 'http://localhost:3000/api';
@@ -61,4 +61,22 @@ static const String baseUrl = 'http://10.0.2.2:3000/api';
       throw Exception('Error ${response.statusCode}: ${response.body}');
     }
   }
+
+  static Future<Map<String, dynamic>> patch(
+  String path,
+  Map<String, dynamic> body,
+  ) async {
+    final uri = Uri.parse('$baseUrl$path');
+    final response = await http.patch(
+      uri,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Error ${response.statusCode}: ${response.body}');
+    }
+  }
+
 }

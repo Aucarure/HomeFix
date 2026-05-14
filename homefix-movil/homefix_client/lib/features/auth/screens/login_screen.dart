@@ -3,7 +3,9 @@ import '../../../core/constants/app_colors.dart';
 import '../services/auth_service.dart';
 import 'registro_cliente_screen.dart';
 import 'registro_tecnico_screen.dart';
-import '../../home/screens/home_screen.dart';
+import '../../../main.dart';          
+import '../../../core/services/session_service.dart'; 
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -35,17 +37,19 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
 
       final rol = resultado['usuario']['rol'];
+      SessionService.guardar(resultado['usuario']); // ← AGREGAR esta línea
+
 
       if (rol == 'cliente') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => const MainScreen()),
         );
       } else if (rol == 'tecnico') {
         // Por ahora también va a HomeScreen hasta que hagamos la vista técnico
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => const MainScreen()),
         );
       }
     } catch (e) {

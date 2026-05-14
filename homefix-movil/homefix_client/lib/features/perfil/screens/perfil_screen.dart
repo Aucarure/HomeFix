@@ -1,9 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/services/session_service.dart';
+import '../../auth/screens/login_screen.dart';
+import 'editar_perfil_screen.dart';
 import 'cupones_screen.dart';
 
 class PerfilScreen extends StatelessWidget {
   const PerfilScreen({super.key});
+
+  Future<void> _cerrarSesion(BuildContext context) async {
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Cerrar sesión'),
+        content: const Text('¿Estás seguro que deseas cerrar sesión?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancelar', style: TextStyle(color: AppColors.textGrey)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Cerrar sesión',
+                style: TextStyle(color: Color(0xFFE53935))),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmar != true) return;
+
+    await Supabase.instance.client.auth.signOut();
+    SessionService.cerrar();
+
+    if (context.mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        (route) => false,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +52,7 @@ class PerfilScreen extends StatelessWidget {
         backgroundColor: AppColors.white,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textDark),
-          onPressed: () {
-            // Manejar retroceso si es necesario
-          },
-        ),
+        automaticallyImplyLeading: false,
         title: const Text(
           'Mi perfil',
           style: TextStyle(
@@ -35,7 +69,7 @@ class PerfilScreen extends StatelessWidget {
             const Divider(height: 1, color: Color(0xFFEEEEEE)),
             _buildOptionsMenu(context),
             const Divider(height: 1, color: Color(0xFFEEEEEE)),
-            _buildLogoutButton(),
+            _buildLogoutButton(context),
           ],
         ),
       ),
@@ -43,43 +77,53 @@ class PerfilScreen extends StatelessWidget {
   }
 
   Widget _buildUserSection() {
+    final nombre = SessionService.nombre ?? 'Usuario';
+    final inicial = nombre.isNotEmpty ? nombre[0].toUpperCase() : 'U';
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          const CircleAvatar(
-            radius: 32, // Tamaño 64 de diámetro
-            backgroundColor: Color(0xFFEEEEEE),
-            backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=anaperez'),
-            child: Text('AP', style: TextStyle(color: AppColors.textGrey)),
+          CircleAvatar(
+            radius: 32,
+            backgroundColor: AppColors.primary.withOpacity(0.1),
+            child: Text(
+              inicial,
+              style: const TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  'Ana Pérez',
-                  style: TextStyle(
+                  nombre,
+                  style: const TextStyle(
                     color: AppColors.textDark,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
-                  'ana.perez@mail.com',
-                  style: TextStyle(
+                  Supabase.instance.client.auth.currentUser?.email ?? '',
+                  style: const TextStyle(
                     color: AppColors.textGrey,
                     fontSize: 14,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
-                  '+51 987 654 321',
+                  SessionService.rol ?? '',
                   style: TextStyle(
-                    color: AppColors.textGrey,
-                    fontSize: 14,
+                    color: AppColors.primary.withOpacity(0.8),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -96,7 +140,10 @@ class PerfilScreen extends StatelessWidget {
         _buildOptionItem(
           icon: Icons.person_outline,
           title: 'Editar datos personales',
-          onTap: () {},
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const EditarPerfilScreen()),
+          ),
         ),
         _buildOptionItem(
           icon: Icons.location_on_outlined,
@@ -109,7 +156,7 @@ class PerfilScreen extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const CuponesScreen()),
+              MaterialPageRoute(builder: (_) => const CuponesScreen()),
             );
           },
         ),
@@ -122,7 +169,11 @@ class PerfilScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionItem({required IconData icon, required String title, required VoidCallback onTap}) {
+  Widget _buildOptionItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -161,9 +212,9 @@ class PerfilScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLogoutButton() {
+  Widget _buildLogoutButton(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => _cerrarSesion(context),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../solicitud/screens/paso1_categoria_screen.dart';
-
+import '../../../core/services/session_service.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -26,14 +26,20 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildHeaderWithSearch(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
+    final nombre = SessionService.nombre ?? 'Usuario';
+    final inicial = nombre.isNotEmpty ? nombre[0].toUpperCase() : 'U';
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
-          padding: EdgeInsets.only(top: topPadding > 0 ? topPadding + 20 : 60, left: 24, right: 24, bottom: 40),
+          padding: EdgeInsets.only(
+              top: topPadding > 0 ? topPadding + 20 : 60,
+              left: 24,
+              right: 24,
+              bottom: 40),
           decoration: const BoxDecoration(
             color: AppColors.primary,
             borderRadius: BorderRadius.only(
@@ -53,9 +59,9 @@ class HomeScreen extends StatelessWidget {
                     style: TextStyle(color: AppColors.white, fontSize: 14),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Ana Pérez 👋',
-                    style: TextStyle(
+                  Text(
+                    '$nombre 👋',
+                    style: const TextStyle(
                       color: AppColors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -67,18 +73,24 @@ class HomeScreen extends StatelessWidget {
                       Icon(Icons.location_on, color: AppColors.white, size: 16),
                       SizedBox(width: 4),
                       Text(
-                        'San Isidro, Lima',
+                        'Lima, Perú',
                         style: TextStyle(color: AppColors.white, fontSize: 12),
                       ),
                     ],
                   ),
                 ],
               ),
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 28,
                 backgroundColor: Colors.white24,
-                backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=anaperez'),
-                child: Text('AP', style: TextStyle(color: AppColors.white)),
+                child: Text(
+                  inicial,
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ],
           ),
@@ -116,6 +128,7 @@ class HomeScreen extends StatelessWidget {
       ],
     );
   }
+
 
   Widget _buildActiveRequestCard() {
     return Padding(

@@ -43,7 +43,7 @@ class AuthService {
     request.fields['telefono'] = telefono;
     request.fields['password'] = password;
 
-    for (final archivo of certificados) {
+    for (final archivo in certificados) {
       final nombreArchivo = archivo.path.split('/').last;
       request.files.add(await http.MultipartFile.fromPath(
         'certificados',

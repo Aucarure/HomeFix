@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'core/constants/app_colors.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';          // agregar
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'features/home/screens/home_screen.dart';
 import 'features/pedidos/screens/pedidos_screen.dart';
 import 'features/alertas/screens/alertas_screen.dart';
 import 'features/perfil/screens/perfil_screen.dart';
 import 'features/solicitud/screens/paso1_categoria_screen.dart';
-<<<<<<< HEAD
 import 'features/auth/screens/splash_screen.dart';
-
-void main() async {                                                // async
-  WidgetsFlutterBinding.ensureInitialized();                      // agregar
-  await Supabase.initialize(                                       // agregar
-=======
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Supabase.initialize(
->>>>>>> origin/feature/maps-seguimiento-tecnico
     url: 'https://lilgdbexkkmzipniijkp.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpbGdkYmV4a2ttemlwbmlpamtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3NDI1NTUsImV4cCI6MjA5MzMxODU1NX0.Fqy4Rr9XWZWF1Ejprb_CL1k_58lJ3OOxqSB9l0aWNc8',
   );
+
   runApp(const MyApp());
 }
 
